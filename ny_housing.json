@@ -37,7 +37,7 @@
   "layer": [
     {
       "data": {
-        "url": "../ne_10m_admin_2_counties.json",
+        "url": "ne_10m_admin_2_counties.json",
         "format": { "type": "topojson", "feature": "ne_10m_admin_2_counties" }
       },
       "transform": [
@@ -46,7 +46,7 @@
       "mark": { "type": "geoshape", "fill": "#f5f5f5", "stroke": "#020202" }
     },
     {
-      "data": { "url": "../data/NY-House-Dataset.csv", "format": { "type": "csv" } },
+      "data": { "url": "NY-House-Dataset.csv", "format": { "type": "csv" } },
       "transform": [
         { "calculate": "toNumber(replace(datum.PRICE, ',', ''))", "as": "price_num" },
         { "calculate": "format(datum.price_num, '$,.0f')", "as": "price_formatted" },

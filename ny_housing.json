@@ -1,0 +1,99 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": "New York Housing",
+  "width": 900,
+  "height": 600,
+  "params": [
+    {
+      "name": "houseType",
+      "value": "All",
+      "bind": {
+        "input": "select",
+        "name": "Property Type: ",
+        "options": [
+          "All",
+          "Co-op for sale",
+          "Coming Soon",
+          "Condo for sale",
+          "Condop for sale",
+          "Contingent",
+          "For sale",
+          "Foreclosure",
+          "House for sale",
+          "Land for sale",
+          "Mobile house for sale",
+          "Multi-family home for sale",
+          "Pending",
+          "Townhouse for sale"
+        ]
+      }
+    }
+  ],
+  "projection": {
+  "type": "mercator",
+  "center": [-73.94, 40.70],   
+  "scale": 50000               
+},
+  "layer": [
+    {
+      "data": {
+        "url": "../ne_10m_admin_2_counties.json",
+        "format": { "type": "topojson", "feature": "ne_10m_admin_2_counties" }
+      },
+      "transform": [
+        { "filter": "datum.properties.REGION_COD == '36'" }
+      ],
+      "mark": { "type": "geoshape", "fill": "#f5f5f5", "stroke": "#020202" }
+    },
+    {
+      "data": { "url": "../data/NY-House-Dataset.csv", "format": { "type": "csv" } },
+      "transform": [
+        { "calculate": "toNumber(replace(datum.PRICE, ',', ''))", "as": "price_num" },
+        { "calculate": "format(datum.price_num, '$,.0f')", "as": "price_formatted" },
+        { "calculate": "isNaN(toNumber(datum.BEDS)) ? null : round(toNumber(datum.BEDS))", "as": "beds_num" },
+        { "calculate": "isNaN(toNumber(datum.BATH)) ? null : round(toNumber(datum.BATH))", "as": "bath_num" },
+        { "calculate": "isNaN(toNumber(datum.PROPERTYSQFT)) ? null : round(toNumber(datum.PROPERTYSQFT))", "as": "sqft_num" },
+        { "filter": "isValid(datum.LATITUDE) && isValid(datum.LONGITUDE)" },
+        { "filter": "isValid(datum.price_num)" },
+        { "filter": "houseType == 'All' || datum.TYPE == houseType" }
+      ],
+      "mark": { "type": "circle", "opacity": 0.85 },
+      "encoding": {
+        "longitude": { "field": "LONGITUDE", "type": "quantitative" },
+        "latitude":  { "field": "LATITUDE",  "type": "quantitative" },
+        "size": {
+          "field": "price_num",
+          "type": "quantitative",
+          "title": "Price (USD)",
+          "scale": { "range": [10, 600] }
+        },
+        "color": {
+          "field": "TYPE",
+          "type": "nominal",
+          "title": "Type of House",
+          "legend": {
+            "orient": "top-left",
+            "direction": "vertical",
+            "offset": 10,
+            "padding": 8,
+            "titleAnchor": "start",
+            "labelFontSize": 14,
+            "titleFontSize": 16,
+            "fillColor": "#ffffffcc",
+            "strokeColor": "#adb5bd",
+            "cornerRadius": 6
+          }
+        },
+        "tooltip": [
+          { "field": "price_formatted", "type": "nominal", "title": "Price" },
+          { "field": "TYPE", "type": "nominal", "title": "Type of House" },
+          { "field": "beds_num", "type": "quantitative", "title": "Beds" },
+          { "field": "bath_num", "type": "quantitative", "title": "Baths" },
+          { "field": "SUBLOCALITY", "type": "nominal", "title": "Sublocality" },
+          { "field": "FORMATTED_ADDRESS", "type": "nominal", "title": "Address" },
+          { "field": "sqft_num", "type": "quantitative", "title": "Area (sqft)" }
+        ]
+      }
+    }
+  ]
+}

@@ -59,26 +59,79 @@
     "filter": "isValid(datum.geo)"
   }
 ],
-  "projection": {"type": "albersUsa"},
-  "mark": {"type": "geoshape", "stroke": "#ffffff", "strokeWidth": 0.5},
-  "encoding": {
-    "shape": {"field": "geo", "type": "geojson"},
-    "color": {
-      "field": "HPI",
-      "type": "quantitative",
-      "title": "HPI (1980 = 100)",
-      "scale": {
-        "range": [
-          "hsl(208, 20%, 92%)",
-          "hsl(208, 85%, 38%)"
+"projection": {"type": "albersUsa"},
+"layer": [
+  {
+    "mark": {"type": "geoshape", "stroke": "#ffffff", "strokeWidth": 0.5},
+    "encoding": {
+      "shape": {"field": "geo", "type": "geojson"},
+      "color": {
+        "field": "HPI",
+        "type": "quantitative",
+        "title": "HPI (1980 = 100)",
+        "scale": {
+          "range": [
+            "hsl(208, 20%, 92%)",
+            "hsl(208, 85%, 38%)"
+          ]
+        }
+      },
+      "tooltip": [
+        {"field": "geo.properties.name", "title": "State"},
+        {"field": "HPI", "type": "quantitative", "format": ".1f"},
+        {"field": "Year", "type": "ordinal"},
+        {"field": "Quarter", "type": "ordinal"}
+      ]
+    }
+  },
+  {
+    "transform": [
+      {
+        "window": [
+          {"op": "rank", "as": "hpiRank"}
+        ],
+        "sort": [
+          {"field": "HPI", "order": "descending"}
         ]
+      },
+      {"filter": "datum.hpiRank == 1"},
+      {"calculate": "-80", "as": "labelLon"},
+      {"calculate": "24", "as": "labelLat"},
+      {"calculate": "datum.geo.properties.longitude", "as": "stateLon"},
+      {"calculate": "datum.geo.properties.latitude", "as": "stateLat"},
+      {
+        "calculate": "'Highest HPI: ' + datum.geo.properties.name + ' (' + format(datum.HPI, '.1f') + ')'",
+        "as": "text-annotation"
+      },
+      {"filter": "!(datum.Year == 1980 && datum.Quarter == 1)"}
+    ],
+    "layer": [
+      {
+        "mark": {
+          "type": "circle",
+          "color": "#f4cd07",
+          "size": 80
+        },
+        "encoding": {
+          "longitude": {"field": "stateLon"},
+          "latitude": {"field": "stateLat"}
+        }
+      },
+      {
+        "mark": {
+          "type": "text",
+          "fontWeight": "bold",
+          "color": "#1b4965",
+          "fontSize": 14,
+          "align": "left"
+        },
+        "encoding": {
+          "longitude": {"field": "labelLon"},
+          "latitude": {"field": "labelLat"},
+          "text": {"field": "text-annotation"}
+        }
       }
-    },
-    "tooltip": [
-      {"field": "geo.properties.name", "title": "State"},
-      {"field": "HPI", "type": "quantitative", "format": ".1f"},
-      {"field": "Year", "type": "ordinal"},
-      {"field": "Quarter", "type": "ordinal"}
     ]
   }
+]
 }

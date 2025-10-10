@@ -1,0 +1,84 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "description": "US Housing Price Index by State for 2024 Q4",
+  "width": 900,
+  "height": 520,
+  "data": {
+    "url": "full_us_data/hpi_at_state.csv",
+    "format": {
+      "type": "csv",
+      "parse": {
+        "Year": "number",
+        "Quarter": "number",
+        "HPI": "number"
+      }
+    }
+  },
+"params": [
+  {
+    "name": "yearSel",
+    "value": 2025,
+    "bind": {
+      "input": "range",
+      "name": "Year: ",
+      "min": 1975,
+      "max": 2025,
+      "step": 1
+    }
+  },
+  {
+    "name": "quarterSel",
+    "value": 1,
+    "bind": {
+      "input": "select",
+      "name": "Quarter: ",
+      "options": [1, 2, 3, 4],
+      "labels": ["Q1", "Q2", "Q3", "Q4"]
+    }
+  }
+],
+"transform": [
+  {
+    "filter": "datum.Year == yearSel && datum.Quarter == quarterSel"
+  },
+  {
+    "lookup": "State",
+    "from": {
+      "data": {
+        "url": "full_us_data/ne_50m_admin_1_states_provinces.json",
+        "format": {
+          "type": "topojson",
+          "feature": "ne_50m_admin_1_states_provinces"
+        }
+      },
+      "key": "properties.postal"
+    },
+    "as": "geo"
+  },
+  {
+    "filter": "isValid(datum.geo)"
+  }
+],
+  "projection": {"type": "albersUsa"},
+  "mark": {"type": "geoshape", "stroke": "#ffffff", "strokeWidth": 0.5},
+  "encoding": {
+    "shape": {"field": "geo", "type": "geojson"},
+    "color": {
+      "field": "HPI",
+      "type": "quantitative",
+      "title": "HPI (1980 = 100)",
+      "scale": {
+        "range": [
+          "hsl(208, 20%, 92%)",
+          "hsl(208, 85%, 38%)"
+        ]
+      }
+    },
+    "tooltip": [
+      {"field": "geo.properties.name", "title": "State"},
+      {"field": "HPI", "type": "quantitative", "format": ".1f"},
+      {"field": "Year", "type": "ordinal"},
+      {"field": "Quarter", "type": "ordinal"}
+    ]
+  }
+}

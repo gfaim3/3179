@@ -6,27 +6,7 @@
   "params": [
     {
       "name": "houseType",
-      "value": "All",
-      "bind": {
-        "input": "select",
-        "name": "Property Type: ",
-        "options": [
-          "All",
-          "Co-op for sale",
-          "Coming Soon",
-          "Condo for sale",
-          "Condop for sale",
-          "Contingent",
-          "For sale",
-          "Foreclosure",
-          "House for sale",
-          "Land for sale",
-          "Mobile house for sale",
-          "Multi-family home for sale",
-          "Pending",
-          "Townhouse for sale"
-        ]
-      }
+      "value": "All"
     }
   ],
   "projection": {
@@ -70,19 +50,39 @@
         "color": {
           "field": "TYPE",
           "type": "nominal",
-          "title": "Type of House",
-          "legend": {
-            "orient": "top-left",
-            "direction": "vertical",
-            "offset": 10,
-            "padding": 8,
-            "titleAnchor": "start",
-            "labelFontSize": 14,
-            "titleFontSize": 16,
-            "fillColor": "#ffffffcc",
-            "strokeColor": "#adb5bd",
-            "cornerRadius": 6
-          }
+          "scale": {
+            "domain": [
+              "Co-op for sale",
+              "Coming Soon",
+              "Condo for sale",
+              "Condop for sale",
+              "Contingent",
+              "For sale",
+              "Foreclosure",
+              "House for sale",
+              "Land for sale",
+              "Mobile house for sale",
+              "Multi-family home for sale",
+              "Pending",
+              "Townhouse for sale"
+            ],
+            "range": [
+              "#4e79a7",
+              "#f28e2b",
+              "#e15759",
+              "#76b7b2",
+              "#59a14f",
+              "#edc948",
+              "#b07aa1",
+              "#ff9da7",
+              "#9c755f",
+              "#bab0ab",
+              "#8cd17d",
+              "#499894",
+              "#d37295"
+            ]
+          },
+          "legend": null
         },
         "tooltip": [
           { "field": "price_formatted", "type": "nominal", "title": "Price" },

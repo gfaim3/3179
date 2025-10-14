@@ -13,21 +13,54 @@
     integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
     crossorigin="anonymous"
   />
-  <style>
-    body { background-color: #f8f9fa; }
-    .viz-panel { min-height: 420px; }
-  </style>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-<header class="bg-primary text-white py-5 mb-4">
-  <div class="container text-center">
-    <h1 class="display-5 mb-2">New York Housing Market Overview</h1>
+<nav class="navbar navbar-expand-lg navbar-dark navbar-custom shadow-sm sticky-top fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="#top">NY Housing Insights</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link" href="#top">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="#curr_housing">Current Housing Market</a></li>
+        <li class="nav-item"><a class="nav-link" href="#national-housing">National Overview</a></li>
+        <li class="nav-item"><a class="nav-link" href="#statewide-housing">Statewide Insights</a></li>
+        <li class="nav-item"><a class="nav-link" href="#manhattan-housing">Manhattan Focus</a></li>
+      </ul>
+    </div>
   </div>
-</header>
+</nav>
+
 
 <main class="container pb-5">
-  <section class="col-12 col-lg-10 mx-auto mb-4">
+  <section>
+    <h1 class="mb-2 mt-4">The NYC Housing Market</h1>
+      <p class="lead">Will anyone be able to afford a house in NYC anymore?</p>
+  </section>
+
+  <section id="top" class="hero-section mb-4 mt-4">
+    <div class="hero-content py-5 px-4 px-lg-5 text-center text-lg-start">
+    </div>
+  </section>
+
+  <section id="curr_housing" class="mb-4">
+    <h2 class="mb-3">Map of the Housing Market in New York</h2>
+    <div class="curr-housing-controls">
+      <label for="housing-type-filter" class="form-label mb-0">Property Type</label>
+      <select id="housing-type-filter" class="form-select form-select-sm"></select>
+    </div>
+    <div class="curr-housing-legend" id="housing-legend"></div>
+    <div class="curr-housing-grid">
+      <div id="ny_state_map" class="viz-panel"></div>
+      <div id="manhattan_map" class="viz-panel"></div>
+    </div>
+  </section>
+
+  <section id="national-housing" class="col-12 col-lg-10 mx-auto mb-4">
     <div class="card shadow-sm">
       <div class="card-header bg-white border-0 text-center">
         <h2 class="h5 mb-0">Homework Week 10: Nationwide Housing Price Index Increase Relative to Q1 1980<br>
@@ -40,29 +73,31 @@
           Example: NY's Q1 2025 value of 1094.0 indicates that the price for the same house has risen 10.94x since then.
         </p>
         <div id="us_map" class="viz-panel"></div>
-        <p>Data up to 1980 Q2</p>
+        <p>Data up to 2025 Q2</p>
       </div>
     </div>
   </section>
-  <section class="col-12 col-lg-10 mx-auto mb-4">
+
+  <section id="statewide-housing" class="col-12 col-lg-10 mx-auto mb-4">
     <div class="card shadow-sm">
       <div class="card-header bg-white border-0 text-center">
         <h2 class="h5 mb-0">Statewide Housing Landscape</h2>
       </div>
       <div class="card-body">
         <p class="text-muted text-center mb-3">Interactive map of New York listings with filters for property type and pricing details.</p>
-        <div id="ny_state_map" class="viz-panel"></div>
+        <div id="ny_state_map_detail" class="viz-panel"></div>
       </div>
     </div>
   </section>
-  <section class="col-12 col-lg-10 mx-auto">
+  
+  <section id="manhattan-housing" class="col-12 col-lg-10 mx-auto">
     <div class="card shadow-sm">
       <div class="card-header bg-white border-0 text-center">
         <h2 class="h5 mb-0">Manhattan Housing Focus</h2>
       </div>
       <div class="card-body">
         <p class="text-muted text-center mb-3">Zoom into Manhattan listings for more precise comparisons and property insights.</p>
-        <div id="manhattan_map" class="viz-panel"></div>
+        <div id="manhattan_map_detail" class="viz-panel"></div>
       </div>
     </div>
   </section>
@@ -71,13 +106,147 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 <script>
-  vegaEmbed('#ny_state_map', 'ny_housing.json', { actions: false }).catch(console.error);
-</script>
-<script>
-  vegaEmbed('#manhattan_map', 'manhattan.json', { actions: false }).catch(console.error);
+  (function () {
+    const propertyTypes = [
+      { value: 'All', label: 'All property types' },
+      { value: 'Co-op for sale', label: 'Co-op for sale' },
+      { value: 'Coming Soon', label: 'Coming Soon' },
+      { value: 'Condo for sale', label: 'Condo for sale' },
+      { value: 'Condop for sale', label: 'Condop for sale' },
+      { value: 'Contingent', label: 'Contingent' },
+      { value: 'For sale', label: 'For sale' },
+      { value: 'Foreclosure', label: 'Foreclosure' },
+      { value: 'House for sale', label: 'House for sale' },
+      { value: 'Land for sale', label: 'Land for sale' },
+      { value: 'Mobile house for sale', label: 'Mobile house for sale' },
+      { value: 'Multi-family home for sale', label: 'Multi-family home for sale' },
+      { value: 'Pending', label: 'Pending' },
+      { value: 'Townhouse for sale', label: 'Townhouse for sale' }
+    ];
+
+    const propertyColors = {
+      'Co-op for sale': '#4e79a7',
+      'Coming Soon': '#f28e2b',
+      'Condo for sale': '#e15759',
+      'Condop for sale': '#76b7b2',
+      'Contingent': '#59a14f',
+      'For sale': '#edc948',
+      'Foreclosure': '#b07aa1',
+      'House for sale': '#ff9da7',
+      'Land for sale': '#9c755f',
+      'Mobile house for sale': '#bab0ab',
+      'Multi-family home for sale': '#8cd17d',
+      'Pending': '#499894',
+      'Townhouse for sale': '#d37295'
+    };
+
+    const filterSelect = document.getElementById('housing-type-filter');
+    const legendContainer = document.getElementById('housing-legend');
+
+    if (!filterSelect || !legendContainer) {
+      return;
+    }
+
+    propertyTypes.forEach(({ value, label }) => {
+      const option = document.createElement('option');
+      option.value = value;
+      option.textContent = label;
+      filterSelect.append(option);
+    });
+    filterSelect.value = propertyTypes[0].value;
+
+    const legendItems = [];
+    let views = [];
+
+    function updateLegend(selected) {
+      legendItems.forEach(({ type, element }) => {
+        const shouldDim = selected !== 'All' && selected !== type;
+        element.classList.toggle('is-dimmed', shouldDim);
+      });
+    }
+
+    function updateCharts(selection) {
+      views.forEach((view) => {
+        if (typeof view?.signal === 'function') {
+          view.signal('houseType', selection).run();
+        }
+      });
+      updateLegend(selection);
+    }
+
+    Object.entries(propertyColors).forEach(([type, color]) => {
+      const item = document.createElement('span');
+      item.className = 'legend-item';
+      item.dataset.type = type;
+
+      const swatch = document.createElement('span');
+      swatch.className = 'legend-swatch';
+      swatch.style.backgroundColor = color;
+
+      const label = document.createElement('span');
+      label.textContent = type;
+
+      item.append(swatch, label);
+      legendContainer.append(item);
+      legendItems.push({ type, element: item });
+
+      item.addEventListener('click', () => {
+        filterSelect.value = type;
+        updateCharts(type);
+      });
+    });
+
+    const chartConfigs = [
+      { selector: '#ny_state_map', spec: 'ny_housing.json' },
+      { selector: '#manhattan_map', spec: 'manhattan.json' },
+      { selector: '#ny_state_map_detail', spec: 'ny_housing.json' },
+      { selector: '#manhattan_map_detail', spec: 'manhattan.json' }
+    ];
+
+    Promise.all(chartConfigs.map(({ selector, spec }) => vegaEmbed(selector, spec, { actions: false })))
+      .then((results) => {
+        views = results.map((result) => result.view);
+        updateCharts(filterSelect.value);
+      })
+      .catch(console.error);
+
+    filterSelect.addEventListener('change', (event) => {
+      updateCharts(event.target.value);
+    });
+
+    updateLegend(filterSelect.value);
+  })();
 </script>
 <script>
   vegaEmbed('#us_map', 'us_housing.json', { actions: false }).catch(console.error);
+</script>
+<script>
+  const sections = Array.from(document.querySelectorAll('main section[id]'));
+  const navLinks = document.querySelectorAll('.navbar .nav-link');
+
+  const setActiveNavLink = () => {
+    if (!sections.length) return;
+
+    const offset = window.innerHeight * 0.25;
+    let activeId = sections[0].id;
+
+    sections.forEach((section) => {
+      const { top } = section.getBoundingClientRect();
+      if (top - offset <= 0) {
+        activeId = section.id;
+      }
+    });
+
+    navLinks.forEach((link) => {
+      const matches = link.getAttribute('href') === `#${activeId}`;
+      link.classList.toggle('active', matches);
+    });
+  };
+
+  window.addEventListener('scroll', setActiveNavLink, { passive: true });
+  window.addEventListener('resize', setActiveNavLink);
+  window.addEventListener('load', setActiveNavLink);
+  setActiveNavLink();
 </script>
 
 </body>

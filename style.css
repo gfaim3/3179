@@ -1,0 +1,128 @@
+body { background-color: #f8f9fa; }
+
+.viz-panel { min-height: 420px; }
+
+.navbar-custom {
+  background: linear-gradient(135deg, #10397b, #0b5995);
+  width: 100%;
+  margin: 0 auto;
+  border-radius: 0;
+  padding-block: 0.75rem;
+}
+
+#curr_housing .curr-housing-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+#curr_housing .curr-housing-controls label {
+  font-weight: 600;
+  margin-bottom: 0;
+}
+
+#curr_housing .curr-housing-controls .form-select {
+  width: 240px;
+  max-width: 100%;
+}
+
+#curr_housing .curr-housing-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+#curr_housing .curr-housing-legend .legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.95rem;
+  padding: 0.25rem 0.65rem;
+  border-radius: 0.5rem;
+  background-color: #f1f3f5;
+  color: #343a40;
+  cursor: pointer;
+}
+
+#curr_housing .curr-housing-legend .legend-item .legend-swatch {
+  width: 14px;
+  height: 14px;
+  border-radius: 0.25rem;
+}
+
+#curr_housing .curr-housing-legend .legend-item.is-dimmed {
+  opacity: 0.45;
+}
+
+#curr_housing .curr-housing-grid {
+  display: flex;
+  gap: 1.5rem;
+  align-items: stretch;
+  flex-wrap: wrap;
+}
+
+#curr_housing .curr-housing-grid .viz-panel {
+  flex: 1 1 320px;
+  min-width: 240px;
+}
+
+
+h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #000000;
+    font-family: 'Poppins', sans-serif;
+}
+
+p {
+    font-size: 1.125rem;
+    color: #333333;
+    font-family: 'Poppins', sans-serif;
+}
+
+.navbar-custom.sticky-top { top: 0; }
+
+.navbar-custom .container { max-width: 100%; padding-inline: 1rem; }
+
+.navbar-custom .navbar-nav { gap: 0.5rem; }
+
+.navbar-custom .navbar-brand { font-weight: 600; color: #f8f9fa; transition: color 0.3s ease; }
+
+.navbar-custom .navbar-brand:hover { color: #ffffff; }
+
+.navbar-custom .nav-link { color: #dbe2ef; transition: color 0.3s ease, background-color 0.3s ease; border-radius: 0.5rem; padding-inline: 0.75rem; }
+
+.navbar-custom .nav-link:hover { color: #ffffff; }
+
+.navbar-custom .nav-link.active { background-color: rgba(255, 255, 255, 0.22); color: #ffffff; font-weight: 600; }
+
+section { scroll-margin-top: 100px; }
+
+main.container { max-width: none; width: 100%; margin: 0 auto; padding-inline: 1rem; }
+
+.hero-section {
+  position: relative;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  min-height: 300px;
+  background: url('pictures/NY_Home.jpg') center / cover no-repeat;
+}
+
+.hero-section .hero-content {
+  position: relative;
+  z-index: 1;
+  color: #fdfdfd;
+  text-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
+}
+
+.hero-section .lead { color: #f4f7ff; }
+
+@media (min-width: 992px) {
+  main .col-lg-10 {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+}

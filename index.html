@@ -298,10 +298,14 @@
 
     function updateCharts(selection) {
       const trimmed = selection && selection.trim() !== '' ? selection.trim() : '';
-      const selectionArray = trimmed ? [trimmed] : [];
+      const selectionValue = trimmed || null;
       views.forEach((view) => {
         if (typeof view?.signal === 'function') {
-          view.signal('selectedTypes', selectionArray).run();
+          try {
+            view.signal('selectedType', selectionValue).run();
+          } catch (_) {
+            // Ignore views without the selectedType signal
+          }
         }
       });
       updateLegend(trimmed);
@@ -332,17 +336,29 @@
 
     const chartConfigs = [
       { selector: '#ny_state_map', spec: 'ny_housing.json' },
-      { selector: '#manhattan_map', spec: 'manhattan.json' },
-      { selector: '#ny_state_map_detail', spec: 'ny_housing.json' },
-      { selector: '#manhattan_map_detail', spec: 'manhattan.json' }
+      { selector: '#manhattan_map', spec: 'manhattan.json' }
     ];
 
-    Promise.all(chartConfigs.map(({ selector, spec }) => vegaEmbed(selector, spec, { actions: false })))
-      .then((results) => {
-        views = results.map((result) => result.view);
-        updateCharts(filterSelect.value);
-      })
-      .catch(console.error);
+    const embedPromises = chartConfigs.reduce((acc, { selector, spec }) => {
+      const container = document.querySelector(selector);
+      if (!container) {
+        console.warn(`Skipping chart for ${selector} because the container was not found.`);
+        return acc;
+      }
+      const promise = vegaEmbed(container, spec, { actions: false })
+        .then((result) => result.view)
+        .catch((error) => {
+          console.error(`Failed to render chart for ${selector}:`, error);
+          return null;
+        });
+      acc.push(promise);
+      return acc;
+    }, []);
+
+    Promise.all(embedPromises).then((resultViews) => {
+      views = resultViews.filter(Boolean);
+      updateCharts(filterSelect.value);
+    });
 
     filterSelect.addEventListener('change', (event) => {
       updateCharts(event.target.value);

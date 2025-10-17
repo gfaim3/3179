@@ -6,8 +6,8 @@
   "autosize": { "type": "fit", "contains": "padding" },
   "params": [
     {
-      "name": "selectedTypes",
-      "value": []
+      "name": "selectedType",
+      "value": null
     }
   ],
   "projection": {
@@ -53,16 +53,6 @@
     },
     {
       "data": {
-        "url": "data/ne_10m_admin_2_counties.json",
-        "format": { "type": "topojson", "feature": "ne_10m_admin_2_counties" }
-      },
-      "transform": [
-        { "filter": "datum.properties.REGION_COD == '36'" }
-      ],
-      "mark": { "type": "geoshape", "fill": "#f5f5f5", "stroke": "#020202" }
-    },
-    {
-      "data": {
         "url": "data/ne_10m_roads.json",
         "format": { "type": "topojson", "feature": "ne_10m_roads" }
       },
@@ -83,7 +73,7 @@
         { "calculate": "isNaN(toNumber(datum.PROPERTYSQFT)) ? null : round(toNumber(datum.PROPERTYSQFT))", "as": "sqft_num" },
         { "filter": "isValid(datum.LATITUDE) && isValid(datum.LONGITUDE)" },
         { "filter": "isValid(datum.price_num)" },
-        { "filter": "length(selectedTypes) && indexof(selectedTypes, datum.TYPE) >= 0" }
+        { "filter": "selectedType && datum.TYPE == selectedType" }
       ],
       "mark": { "type": "circle", "opacity": 0.85 },
       "encoding": {
@@ -93,12 +83,28 @@
           "field": "price_num",
           "type": "quantitative",
           "title": "Price (USD)",
+          "scale": {
+            "type": "sqrt",
+            "domain": [500000, 100000000],
+            "range": [20, 220],
+            "clamp": true,
+            "zero": false
+          },
           "legend": {
             "orient": "right",
             "direction": "vertical",
             "titleAnchor": "start",
             "padding": 8,
-            "values": [100000, 300000, 600000, 1200000, 2500000, 5000000]
+            "values": [
+              500000,
+              1000000,
+              2000000,
+              5000000,
+              10000000,
+              20000000,
+              50000000,
+              100000000
+            ]
           }
         },
         "color": {

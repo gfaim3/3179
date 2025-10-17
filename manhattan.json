@@ -5,8 +5,8 @@
   "height": 600,
   "params": [
     {
-      "name": "houseType",
-      "value": "All"
+      "name": "selectedType",
+      "value": null
     }
   ],
   "projection": {
@@ -43,9 +43,7 @@
         { "calculate": "isNaN(toNumber(datum.PROPERTYSQFT)) ? null : round(toNumber(datum.PROPERTYSQFT))", "as": "sqft_num" },
         { "filter": "isValid(datum.LATITUDE) && isValid(datum.LONGITUDE)" },
         { "filter": "isValid(datum.price_num)" },
-        {
-          "filter": "houseType == 'All' || datum.TYPE == houseType"
-        },
+        { "filter": "selectedType && datum.TYPE == selectedType" },
         {
           "filter": "indexof(['Manhattan','New York','New York County'], datum.SUBLOCALITY) >= 0"
         }

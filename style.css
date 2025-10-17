@@ -161,11 +161,91 @@ body { background-color: #f8f9fa; }
   min-height: 420px;
 }
 
+.usa-map-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 1fr);
+  gap: 1.5rem;
+  align-items: stretch;
+}
+.usa-map-card,
+.usa-map-insights-card {
+  height: 100%;
+}
+.usa-map-card {
+  width: 100%;
+}
+.usa-map-insights-card {
+  width: 100%;
+}
+.usa-map-top-states {
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e9ecef;
+}
+.top-hpi-list {
+  list-style-position: inside;
+  padding-left: 0;
+  margin: 0;
+  color: #1f2f43;
+}
+.top-hpi-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin-bottom: 0.35rem;
+}
+.top-hpi-list li:last-child {
+  margin-bottom: 0;
+}
+.top-hpi-list .state-name {
+  font-weight: 600;
+  color: #0c386f;
+}
+.top-hpi-list .state-value {
+  color: #495057;
+  font-variant-numeric: tabular-nums;
+}
+@media (max-width: 991px) {
+  .usa-map-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
 h1 {
     font-size: 2.5rem;
     font-weight: 700;
     color: #000000;
     font-family: 'Poppins', sans-serif;
+}
+
+h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #111111;
+    font-family: 'Poppins', sans-serif;
+}
+
+h3 {
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: #222222;
+    font-family: 'Poppins', sans-serif;
+}
+
+h4 {
+    font-size: 1.125rem;
+    font-weight: 500;
+    color: #333333;
+    font-family: 'Poppins', sans-serif;
+}
+
+h5 {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #444444;
+    font-family: 'Poppins', sans-serif;
+    font-style: italic;
 }
 
 p {

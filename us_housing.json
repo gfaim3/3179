@@ -70,10 +70,12 @@
         "type": "quantitative",
         "title": "HPI (1980 = 100)",
         "scale": {
+          "domain": [0, 1200],
           "range": [
             "hsl(208, 20%, 92%)",
             "hsl(208, 85%, 38%)"
-          ]
+          ],
+          "clamp": true
         }
       },
       "tooltip": [
@@ -95,8 +97,8 @@
         ]
       },
       {"filter": "datum.hpiRank == 1"},
-      {"calculate": "-80", "as": "labelLon"},
-      {"calculate": "24", "as": "labelLat"},
+      {"calculate": "-97", "as": "labelLon"},
+      {"calculate": "26", "as": "labelLat"},
       {"calculate": "datum.geo.properties.longitude", "as": "stateLon"},
       {"calculate": "datum.geo.properties.latitude", "as": "stateLat"},
       {
@@ -110,6 +112,46 @@
         "mark": {
           "type": "circle",
           "color": "#f4cd07",
+          "size": 80
+        },
+        "encoding": {
+          "longitude": {"field": "stateLon"},
+          "latitude": {"field": "stateLat"}
+        }
+      },
+      {
+        "mark": {
+          "type": "text",
+          "fontWeight": "bold",
+          "color": "#1b4965",
+          "fontSize": 14,
+          "align": "left"
+        },
+        "encoding": {
+          "longitude": {"field": "labelLon"},
+          "latitude": {"field": "labelLat"},
+          "text": {"field": "text-annotation"}
+        }
+      }
+    ]
+  },
+  {
+    "transform": [
+      {"filter": "datum.State == 'NY'"},
+      {"calculate": "datum.geo.properties.longitude", "as": "stateLon"},
+      {"calculate": "datum.geo.properties.latitude", "as": "stateLat"},
+      {"calculate": "-97", "as": "labelLon"},
+      {"calculate": "27", "as": "labelLat"},
+      {
+        "calculate": "'New York HPI: ' + format(datum.HPI, '.1f')",
+        "as": "text-annotation"
+      }
+    ],
+    "layer": [
+      {
+        "mark": {
+          "type": "circle",
+          "color": "#4cf344",
           "size": 80
         },
         "encoding": {

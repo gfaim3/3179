@@ -27,7 +27,7 @@
       <ul class="navbar-nav ms-auto">
         <li class="nav-item"><a class="nav-link" href="#top">Home</a></li>
         <li class="nav-item"><a class="nav-link" href="#curr_housing">Current Housing Market</a></li>
-        <li class="nav-item"><a class="nav-link" href="#national-housing">National Overview</a></li>
+        <li class="nav-item"><a class="nav-link" href="#national-housing">National Comparison</a></li>
         <li class="nav-item"><a class="nav-link" href="#statewide-housing">Statewide Insights</a></li>
         <li class="nav-item"><a class="nav-link" href="#manhattan-housing">Manhattan Focus</a></li>
       </ul>
@@ -46,7 +46,8 @@
   </section>
 
   <section id="curr_housing" class="mb-4">
-    <h2 class="mb-3">Map of the Housing Market in New York</h2>
+    <h2 class="mb-3">Current Housing Market</h2>
+    <h3 class="mb-4">Explore the current housing market in New York State by property type.</h3>
     <div class="curr-housing-controls">
       <label for="housing-type-filter" class="form-label mb-0">Property Type</label>
       <select id="housing-type-filter" class="form-select form-select-sm"></select>
@@ -81,22 +82,50 @@
     </div>
   </section>
 
-  <section id="national-housing" class="col-12 col-lg-10 mx-auto mb-4">
-    <div class="card shadow-sm">
-      <div class="card-header bg-white border-0 text-center">
-        <h2 class="h5 mb-0">Homework Week 10: Nationwide Housing Price Index Increase Relative to Q1 1980<br>
-          Comparing NY Housing Price Increase overtime to other States in the US, is NY really the most expensive state to buy a house? Has it been overtime?
-        </h2>
+  <section id="national-housing" class="mb-4">
+    <h2>National Comparison</h2>
+    <h3 class="mb-4">Compare New York's housing price appreciation to other states across the country, looking through the Housing Price Index.</h3>
+    <p class="text-muted mb-3">
+      Housing Price Index (HPI) values are relative to Q1 1980 (baseline of 100).<br>
+      New York's Q1 2025 value of 1094.0 means prices are roughly 10.9x higher than in 1980.
+    </p>
+    <div class="usa-map-layout">
+      <div class="card shadow-sm usa-map-card">
+        <div class="card-header bg-white border-0 text-center">
+        </div>
+        <div class="card-body">
+          <div id="us_map" class="viz-panel"></div>
+          <p class="mb-0">Data up to 2025 Q2</p>
+        </div>
       </div>
-      <div class="card-body">
-        <p class="text-muted text-center mb-3">
-          Choropleth map showing Housing Price Index in reference to Q1 1980 with a value of 100.<br>
-          Example: NY's Q1 2025 value of 1094.0 indicates that the price for the same house has risen 10.94x since then.
-        </p>
-        <div id="us_map" class="viz-panel"></div>
-        <p>Data up to 2025 Q2</p>
+      <div class="card shadow-sm usa-map-insights-card">
+        <div class="card-header bg-white border-0 text-center">
+          <h3 class="h6 mb-0">How to Read the Map</h3>
+        </div>
+        <div class="card-body">
+          <p class="text-muted small">
+            Compare cumulative price appreciation across states since 1980 without losing the context of the full-width map.
+          </p>
+          <ul class="list-unstyled small mb-3">
+            <li class="mb-2"><span class="fw-semibold">Hover:</span> To find each states HPI for the year and quarter.</li>
+            <li class="mb-2"><span class="fw-semibold">Shade:</span> Darker blues translate to faster growth of housing prices, lighter shades indicate slower growth since 1980 (or even decreases if HPI is less than 100.)</li>
+            <li><span class="fw-semibold">Focus:</span> Find the spatial points and annotations showcasing the greatest HPI increase in that year and quarter and compare it to New York's HPI for that same time frame.</li>
+          </ul>
+          <div class="usa-map-top-states">
+            <h4 class="h6 text-uppercase text-muted mb-2">Top 5 States by HPI in 2025 Q1</h4>
+            <ol id="top-hpi-states" class="top-hpi-list small mb-0">
+            </ol>
+          </div>
+        </div>
       </div>
     </div>
+  </section>
+
+  <section id="statewide-housing" class="mb-4">
+    <h2 class="mb-3">Statewide Insights</h2>
+    <h3 class="mb-4">So, now we have found that it is indeed expensive to live in New York City and it is the more expensive area of the second most expensive state in USA.</h3>
+    <h4>Do people earn more to live here?</h4>
+    <div id="ny_state_map" class="viz-panel"></div>
   </section>
 
 </main>
@@ -404,7 +433,168 @@
   })();
 </script>
 <script>
-  vegaEmbed('#us_map', 'us_housing.json', { actions: false }).catch(console.error);
+  (function () {
+    const topStatesList = document.getElementById('top-hpi-states');
+    const formatHpi = new Intl.NumberFormat('en-US', { maximumFractionDigits: 1 });
+    const stateNameLookup = {
+      AL: 'Alabama',
+      AK: 'Alaska',
+      AZ: 'Arizona',
+      AR: 'Arkansas',
+      CA: 'California',
+      CO: 'Colorado',
+      CT: 'Connecticut',
+      DE: 'Delaware',
+      FL: 'Florida',
+      GA: 'Georgia',
+      HI: 'Hawaii',
+      ID: 'Idaho',
+      IL: 'Illinois',
+      IN: 'Indiana',
+      IA: 'Iowa',
+      KS: 'Kansas',
+      KY: 'Kentucky',
+      LA: 'Louisiana',
+      ME: 'Maine',
+      MD: 'Maryland',
+      MA: 'Massachusetts',
+      MI: 'Michigan',
+      MN: 'Minnesota',
+      MS: 'Mississippi',
+      MO: 'Missouri',
+      MT: 'Montana',
+      NE: 'Nebraska',
+      NV: 'Nevada',
+      NH: 'New Hampshire',
+      NJ: 'New Jersey',
+      NM: 'New Mexico',
+      NY: 'New York',
+      NC: 'North Carolina',
+      ND: 'North Dakota',
+      OH: 'Ohio',
+      OK: 'Oklahoma',
+      OR: 'Oregon',
+      PA: 'Pennsylvania',
+      RI: 'Rhode Island',
+      SC: 'South Carolina',
+      SD: 'South Dakota',
+      TN: 'Tennessee',
+      TX: 'Texas',
+      UT: 'Utah',
+      VT: 'Vermont',
+      VA: 'Virginia',
+      WA: 'Washington',
+      WV: 'West Virginia',
+      WI: 'Wisconsin',
+      WY: 'Wyoming',
+      DC: 'District of Columbia',
+      PR: 'Puerto Rico'
+    };
+
+    let hpiRecords = null;
+
+    function renderTopStates(year, quarter) {
+      if (!topStatesList) {
+        return;
+      }
+      if (!hpiRecords) {
+        topStatesList.innerHTML = '<li class="text-muted">Loading top states…</li>';
+        return;
+      }
+
+      const numericYear = Number(year);
+      const numericQuarter = Number(quarter);
+
+      if (!Number.isFinite(numericYear) || !Number.isFinite(numericQuarter)) {
+        topStatesList.innerHTML = '<li class="text-muted">Awaiting selection…</li>';
+        return;
+      }
+
+      const filtered = hpiRecords.filter(
+        (row) => row.Year === numericYear && row.Quarter === numericQuarter
+      );
+
+      if (!filtered.length) {
+        topStatesList.innerHTML = '<li class="text-muted">No data for this period.</li>';
+        return;
+      }
+
+      const topFive = filtered
+        .slice()
+        .sort((a, b) => b.HPI - a.HPI)
+        .slice(0, 5);
+
+      topStatesList.innerHTML = topFive
+        .map(({ State, HPI }) => {
+          const stateName = stateNameLookup[State] || State;
+          return `<li><span class="state-name">${stateName}</span><span class="state-value">${formatHpi.format(HPI)}</span></li>`;
+        })
+        .join('');
+    }
+
+    function setupListeners(view) {
+      const yearInput = document.querySelector('#vega-bind-yearSel input');
+      const quarterSelect = document.querySelector('#vega-bind-quarterSel select');
+
+      const getYear = () => {
+        if (yearInput) {
+          return Number(yearInput.value);
+        }
+        const signalValue = view.signal('yearSel');
+        return Number(signalValue);
+      };
+
+      const getQuarter = () => {
+        if (quarterSelect) {
+          return Number(quarterSelect.value);
+        }
+        const signalValue = view.signal('quarterSel');
+        return Number(signalValue);
+      };
+
+      const handleUpdate = () => renderTopStates(getYear(), getQuarter());
+
+      yearInput?.addEventListener('input', handleUpdate);
+      yearInput?.addEventListener('change', handleUpdate);
+      quarterSelect?.addEventListener('change', handleUpdate);
+
+      handleUpdate();
+    }
+
+    vegaEmbed('#us_map', 'us_housing.json', { actions: false })
+      .then(({ view }) => {
+        setupListeners(view);
+
+        return fetch('full_us_data/hpi_at_state.csv')
+          .then((response) => response.text())
+          .then((text) => {
+            const rows = vega.read(text, { type: 'csv' });
+            hpiRecords = rows
+              .map((row) => {
+                const year = Number(row.Year);
+                const quarter = Number(row.Quarter);
+                const hpi = Number(row.HPI);
+                if (!Number.isFinite(year) || !Number.isFinite(quarter) || !Number.isFinite(hpi)) {
+                  return null;
+                }
+                return {
+                  State: row.State || '',
+                  Year: year,
+                  Quarter: quarter,
+                  HPI: hpi
+                };
+              })
+              .filter((row) => row && row.State);
+            renderTopStates(view.signal('yearSel'), view.signal('quarterSel'));
+          });
+      })
+      .catch((error) => {
+        console.error('Failed to render US housing map or top states list:', error);
+        if (topStatesList) {
+          topStatesList.innerHTML = '<li class="text-danger">Unable to load top states.</li>';
+        }
+      });
+  })();
 </script>
 <script>
   const sections = Array.from(document.querySelectorAll('main section[id]'));

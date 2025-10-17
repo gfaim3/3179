@@ -1,6 +1,5 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-  "title": "New York Housing",
   "width": "container",
   "height": 560,
   "autosize": { "type": "fit", "contains": "padding" },
@@ -83,7 +82,7 @@
         { "calculate": "isNaN(toNumber(datum.PROPERTYSQFT)) ? null : round(toNumber(datum.PROPERTYSQFT))", "as": "sqft_num" },
         { "filter": "isValid(datum.LATITUDE) && isValid(datum.LONGITUDE)" },
         { "filter": "isValid(datum.price_num)" },
-        { "filter": "selectedType && datum.TYPE == selectedType" }
+        { "filter": "!selectedType || datum.TYPE == selectedType" }
       ],
       "mark": { "type": "circle", "opacity": 0.85 },
       "encoding": {

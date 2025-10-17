@@ -17,6 +17,13 @@
   "layer": [
     {
       "data": {
+        "url": "data/ne_10m_ocean.json",
+        "format": { "type": "topojson", "feature": "ne_10m_ocean" }
+      },
+      "mark": { "type": "geoshape", "fill": "#79c6f0", "stroke": null }
+    },
+    {
+      "data": {
         "url": "data/ne_10m_admin_2_counties.json",
         "format": { "type": "topojson", "feature": "ne_10m_admin_2_counties" }
       },

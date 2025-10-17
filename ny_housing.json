@@ -1,12 +1,13 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
   "title": "New York Housing",
-  "width": 900,
-  "height": 600,
+  "width": "container",
+  "height": 560,
+  "autosize": { "type": "fit", "contains": "padding" },
   "params": [
     {
-      "name": "houseType",
-      "value": "All"
+      "name": "selectedTypes",
+      "value": []
     }
   ],
   "projection": {
@@ -15,6 +16,41 @@
   "scale": 50000               
 },
   "layer": [
+    {
+      "data": {
+        "url": "data/ne_10m_ocean.json",
+        "format": { "type": "topojson", "feature": "ne_10m_ocean" }
+      },
+      "mark": { "type": "geoshape", "fill": "#79c6f0", "stroke": null }
+    },
+    {
+      "data": {
+        "url": "data/ne_10m_admin_2_counties.json",
+        "format": { "type": "topojson", "feature": "ne_10m_admin_2_counties" }
+      },
+      "transform": [
+        { "filter": "datum.properties.REGION_COD == '34'" }
+      ],
+      "mark": { "type": "geoshape", "fill": "#e0e0e0", "stroke": null }
+    },
+    {
+      "data": {
+        "values": [
+          { "longitude": -74.2, "latitude": 40.80 }
+        ]
+      },
+      "mark": {
+        "type": "text",
+        "text": "New Jersey",
+        "color": "#555555",
+        "fontSize": 16,
+        "fontWeight": "bold"
+      },
+      "encoding": {
+        "longitude": { "field": "longitude", "type": "quantitative" },
+        "latitude": { "field": "latitude", "type": "quantitative" }
+      }
+    },
     {
       "data": {
         "url": "data/ne_10m_admin_2_counties.json",
@@ -26,6 +62,18 @@
       "mark": { "type": "geoshape", "fill": "#f5f5f5", "stroke": "#020202" }
     },
     {
+      "data": {
+        "url": "data/ne_10m_roads.json",
+        "format": { "type": "topojson", "feature": "ne_10m_roads" }
+      },
+      "mark": {
+        "type": "geoshape",
+        "stroke": "#cc6600",
+        "strokeWidth": 1.5,
+        "fill": null
+      }
+    },
+    {
       "data": { "url": "data/NY-House-Dataset.csv", "format": { "type": "csv" } },
       "transform": [
         { "calculate": "toNumber(replace(datum.PRICE, ',', ''))", "as": "price_num" },
@@ -35,7 +83,7 @@
         { "calculate": "isNaN(toNumber(datum.PROPERTYSQFT)) ? null : round(toNumber(datum.PROPERTYSQFT))", "as": "sqft_num" },
         { "filter": "isValid(datum.LATITUDE) && isValid(datum.LONGITUDE)" },
         { "filter": "isValid(datum.price_num)" },
-        { "filter": "houseType == 'All' || datum.TYPE == houseType" }
+        { "filter": "length(selectedTypes) && indexof(selectedTypes, datum.TYPE) >= 0" }
       ],
       "mark": { "type": "circle", "opacity": 0.85 },
       "encoding": {
@@ -45,7 +93,13 @@
           "field": "price_num",
           "type": "quantitative",
           "title": "Price (USD)",
-          "scale": { "range": [10, 600] }
+          "legend": {
+            "orient": "right",
+            "direction": "vertical",
+            "titleAnchor": "start",
+            "padding": 8,
+            "values": [100000, 300000, 600000, 1200000, 2500000, 5000000]
+          }
         },
         "color": {
           "field": "TYPE",

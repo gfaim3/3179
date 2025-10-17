@@ -37,13 +37,11 @@
 
 
 <main class="container pb-5">
-  <section>
-    <h1 class="mb-2 mt-4">The NYC Housing Market</h1>
-      <p class="lead">Will anyone be able to afford a house in NYC anymore?</p>
-  </section>
 
   <section id="top" class="hero-section mb-4 mt-4">
     <div class="hero-content py-5 px-4 px-lg-5 text-center text-lg-start">
+      <h1 class="display-4 fw-bold mb-3">The NYC Housing Market</h1>
+      <p class="hero-tagline lead">Interactive maps, metrics and analysis to help you find out, will anyone ever be able to afford to live in NYC?</p>
     </div>
   </section>
 
@@ -52,11 +50,34 @@
     <div class="curr-housing-controls">
       <label for="housing-type-filter" class="form-label mb-0">Property Type</label>
       <select id="housing-type-filter" class="form-select form-select-sm"></select>
+      <button type="button" id="housing-reset" class="btn btn-outline-secondary btn-sm">Reset</button>
     </div>
     <div class="curr-housing-legend" id="housing-legend"></div>
     <div class="curr-housing-grid">
-      <div id="ny_state_map" class="viz-panel"></div>
-      <div id="manhattan_map" class="viz-panel"></div>
+      <div class="curr-housing-row">
+        <div class="curr-housing-row__col">
+          <div class="card shadow-sm h-100 curr-housing-card">
+            <div class="card-header bg-white border-0 text-center">
+              <h3 class="h6 mb-0">Statewide Housing Overview</h3>
+            </div>
+            <div class="card-body">
+              <div id="ny_state_map" class="viz-panel"></div>
+            </div>
+          </div>
+        </div>
+        <div class="curr-housing-row__col">
+          <div class="card shadow-sm h-100 curr-housing-card">
+            <div class="card-header bg-white border-0 text-center">
+              <h3 class="h6 mb-0">Explanation of Houses</h3>
+            </div>
+            <div class="card-body">
+              <div id="housing-summary" class="housing-summary text-muted">
+                <p class="mb-0">Select a property type to see analysis.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -78,37 +99,12 @@
     </div>
   </section>
 
-  <section id="statewide-housing" class="col-12 col-lg-10 mx-auto mb-4">
-    <div class="card shadow-sm">
-      <div class="card-header bg-white border-0 text-center">
-        <h2 class="h5 mb-0">Statewide Housing Landscape</h2>
-      </div>
-      <div class="card-body">
-        <p class="text-muted text-center mb-3">Interactive map of New York listings with filters for property type and pricing details.</p>
-        <div id="ny_state_map_detail" class="viz-panel"></div>
-      </div>
-    </div>
-  </section>
-  
-  <section id="manhattan-housing" class="col-12 col-lg-10 mx-auto">
-    <div class="card shadow-sm">
-      <div class="card-header bg-white border-0 text-center">
-        <h2 class="h5 mb-0">Manhattan Housing Focus</h2>
-      </div>
-      <div class="card-body">
-        <p class="text-muted text-center mb-3">Zoom into Manhattan listings for more precise comparisons and property insights.</p>
-        <div id="manhattan_map_detail" class="viz-panel"></div>
-      </div>
-    </div>
-  </section>
-
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 <script>
   (function () {
     const propertyTypes = [
-      { value: 'All', label: 'All property types' },
       { value: 'Co-op for sale', label: 'Co-op for sale' },
       { value: 'Coming Soon', label: 'Coming Soon' },
       { value: 'Condo for sale', label: 'Condo for sale' },
@@ -140,12 +136,39 @@
       'Townhouse for sale': '#d37295'
     };
 
-    const filterSelect = document.getElementById('housing-type-filter');
-    const legendContainer = document.getElementById('housing-legend');
+    const propertyDefinitions = {
+      'Co-op for sale': 'Typically an apartment in a cooperative building where buyers purchase shares in the co-op corporation rather than the unit itself.',
+      'Coming Soon': 'Homes scheduled to hit the market shortly; listings are announced early to build interest before official showings begin.',
+      'Condo for sale': 'Individually owned units within a larger building or community that include shared common areas and amenities.',
+      'Condop for sale': 'Hybrid property combining condo ownership with co-op style governance—often a condo building that contains a co-op component.',
+      'Contingent': 'A property under contract where the sale depends on specific conditions being met, such as financing approval or inspection results.',
+      'For sale': 'Traditional active listings currently being marketed without special status or contingencies.',
+      'Foreclosure': 'Homes in the process of bank repossession due to unpaid mortgage obligations, often sold as-is.',
+      'House for sale': 'Stand-alone single-family residences with private entrances and land ownership.',
+      'Land for sale': 'Parcels of undeveloped or vacant land available for new construction or investment.',
+      'Mobile house for sale': 'Factory-built manufactured homes designed for relocation and typically sited in mobile or manufactured home communities.',
+      'Multi-family home for sale': 'Properties containing multiple separate living units within one building, such as duplexes or small apartment structures.',
+      'Pending': 'Listings that have an accepted offer and are moving through closing, with minimal chance of returning to market.',
+      'Townhouse for sale': 'Multi-level residences sharing one or more walls with neighboring homes, often part of planned communities with shared amenities.'
+    };
 
-    if (!filterSelect || !legendContainer) {
+    const filterSelect = document.getElementById('housing-type-filter');
+    const resetButton = document.getElementById('housing-reset');
+    const legendContainer = document.getElementById('housing-legend');
+    const summaryContainer = document.getElementById('housing-summary');
+    let housingData = null;
+
+    if (!filterSelect || !legendContainer || !summaryContainer) {
       return;
     }
+
+    const placeholderOption = document.createElement('option');
+    placeholderOption.value = '';
+    placeholderOption.textContent = 'Select property type';
+    placeholderOption.disabled = true;
+    placeholderOption.selected = true;
+    filterSelect.append(placeholderOption);
+    filterSelect.value = '';
 
     propertyTypes.forEach(({ value, label }) => {
       const option = document.createElement('option');
@@ -153,25 +176,136 @@
       option.textContent = label;
       filterSelect.append(option);
     });
-    filterSelect.value = propertyTypes[0].value;
 
     const legendItems = [];
     let views = [];
 
+    const currencyFormat = new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      maximumFractionDigits: 0
+    });
+
+    const numberFormat = new Intl.NumberFormat('en-US', {
+      maximumFractionDigits: 0
+    });
+
     function updateLegend(selected) {
       legendItems.forEach(({ type, element }) => {
-        const shouldDim = selected !== 'All' && selected !== type;
+        const shouldDim = !!selected && selected !== type;
         element.classList.toggle('is-dimmed', shouldDim);
       });
     }
 
+    function computeSummary(selection) {
+      if (!selection || !housingData) {
+        return null;
+      }
+      const records = housingData.filter((row) => row.TYPE === selection);
+      if (!records.length) {
+        return null;
+      }
+
+      const avgPrice =
+        records.reduce((total, row) => total + row.PRICE, 0) / records.length;
+
+      const sqftValues = records
+        .map((row) => row.SQFT)
+        .filter((value) => typeof value === 'number');
+      const avgSqft =
+        sqftValues.length > 0
+          ? sqftValues.reduce((total, value) => total + value, 0) / sqftValues.length
+          : null;
+
+      const subCounts = new Map();
+      records.forEach((row) => {
+        const key = row.SUBLOCALITY || 'Not specified';
+        subCounts.set(key, (subCounts.get(key) || 0) + 1);
+      });
+      const topSub = Array.from(subCounts.entries()).sort((a, b) => {
+        if (b[1] === a[1]) {
+          return a[0].localeCompare(b[0]);
+        }
+        return b[1] - a[1];
+      })[0];
+
+      const highest = records.reduce((max, row) =>
+        row.PRICE > max.PRICE ? row : max
+      );
+
+      return {
+        avgPrice,
+        avgSqft,
+        topSubLocality: topSub ? topSub[0] : 'Not specified',
+        highest
+      };
+    }
+
+    function renderSummary(selection) {
+      if (!selection) {
+        summaryContainer.innerHTML =
+          '<p class="mb-0">Select a property type to see analysis.</p>';
+        return;
+      }
+      if (!housingData) {
+        summaryContainer.innerHTML =
+          '<p class="mb-0">Loading analysis…</p>';
+        return;
+      }
+
+      const summary = computeSummary(selection);
+      if (!summary) {
+        summaryContainer.innerHTML =
+          '<p class="mb-0">No data available for this property type.</p>';
+        return;
+      }
+
+      const { avgPrice, avgSqft, topSubLocality, highest } = summary;
+      const definition =
+        propertyDefinitions[selection] ||
+        'Property type description is currently unavailable.';
+
+      summaryContainer.innerHTML = `
+        <div class="housing-summary-definition">
+          <h4>${selection}</h4>
+          <p>${definition}</p>
+        </div>
+        <div class="housing-summary-grid">
+          <div class="housing-summary-card">
+            <h4>Average Price</h4>
+            <p>${currencyFormat.format(avgPrice)}</p>
+          </div>
+          <div class="housing-summary-card">
+            <h4>Most Common Sublocality</h4>
+            <p>${topSubLocality}</p>
+          </div>
+          <div class="housing-summary-card">
+            <h4>Average Area</h4>
+            <p>${
+              avgSqft ? numberFormat.format(avgSqft) + ' sqft' : 'Not available'
+            }</p>
+          </div>
+          <div class="housing-summary-card">
+            <h4>Most Expensive House</h4>
+            <p>
+              ${currencyFormat.format(highest.PRICE)}
+              ${highest.ADDRESS ? `<br><span class="text-muted">${highest.ADDRESS}</span>` : ''}
+            </p>
+          </div>
+        </div>
+      `;
+    }
+
     function updateCharts(selection) {
+      const trimmed = selection && selection.trim() !== '' ? selection.trim() : '';
+      const selectionArray = trimmed ? [trimmed] : [];
       views.forEach((view) => {
         if (typeof view?.signal === 'function') {
-          view.signal('houseType', selection).run();
+          view.signal('selectedTypes', selectionArray).run();
         }
       });
-      updateLegend(selection);
+      updateLegend(trimmed);
+      renderSummary(trimmed);
     }
 
     Object.entries(propertyColors).forEach(([type, color]) => {
@@ -214,7 +348,43 @@
       updateCharts(event.target.value);
     });
 
+    resetButton?.addEventListener('click', () => {
+      filterSelect.value = '';
+      updateCharts(null);
+    });
+
     updateLegend(filterSelect.value);
+    renderSummary(filterSelect.value);
+
+    fetch('data/NY-House-Dataset.csv')
+      .then((response) => response.text())
+      .then((text) => {
+        const rows = vega.read(text, { type: 'csv' });
+        housingData = rows
+          .map((row) => {
+            const price = Number(String(row.PRICE || '').replace(/,/g, ''));
+            if (!Number.isFinite(price) || price <= 0) {
+              return null;
+            }
+            const sqftValue = Number(
+              String(row.PROPERTYSQFT || '').replace(/,/g, '')
+            );
+            const sqft =
+              Number.isFinite(sqftValue) && sqftValue > 0 ? sqftValue : null;
+            return {
+              TYPE: row.TYPE || '',
+              SUBLOCALITY: row.SUBLOCALITY || 'Not specified',
+              PRICE: price,
+              SQFT: sqft,
+              ADDRESS: row.FORMATTED_ADDRESS || ''
+            };
+          })
+          .filter(Boolean);
+        renderSummary(filterSelect.value);
+      })
+      .catch((error) => {
+        console.error('Failed to load housing data for summary panel:', error);
+      });
   })();
 </script>
 <script>

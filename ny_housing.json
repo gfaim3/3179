@@ -53,6 +53,16 @@
     },
     {
       "data": {
+        "url": "data/ne_10m_admin_2_counties.json",
+        "format": { "type": "topojson", "feature": "ne_10m_admin_2_counties" }
+      },
+      "transform": [
+        { "filter": "datum.properties.REGION_COD == '36'" }
+      ],
+      "mark": { "type": "geoshape", "fill": "#f5f5f5", "stroke": "#020202" }
+    },
+    {
+      "data": {
         "url": "data/ne_10m_roads.json",
         "format": { "type": "topojson", "feature": "ne_10m_roads" }
       },

@@ -1,0 +1,91 @@
+RegionName,RegionType,Year,Sales
+"Albany, NY",msa,2008,5472.0
+"Albany, NY",msa,2009,5534.0
+"Albany, NY",msa,2010,4880.0
+"Albany, NY",msa,2011,4593.0
+"Albany, NY",msa,2012,5143.0
+"Albany, NY",msa,2013,5867.0
+"Albany, NY",msa,2014,5776.0
+"Albany, NY",msa,2015,6917.0
+"Albany, NY",msa,2016,7885.0
+"Albany, NY",msa,2017,7913.0
+"Albany, NY",msa,2018,7747.0
+"Albany, NY",msa,2019,7021.0
+"Albany, NY",msa,2020,7183.0
+"Albany, NY",msa,2021,10787.0
+"Albany, NY",msa,2022,9621.0
+"Albany, NY",msa,2023,8190.0
+"Albany, NY",msa,2024,7733.0
+"Albany, NY",msa,2025,5795.0
+"Buffalo, NY",msa,2008,10093.0
+"Buffalo, NY",msa,2009,10376.0
+"Buffalo, NY",msa,2010,9265.0
+"Buffalo, NY",msa,2011,8763.0
+"Buffalo, NY",msa,2012,9519.0
+"Buffalo, NY",msa,2013,10488.0
+"Buffalo, NY",msa,2014,10748.0
+"Buffalo, NY",msa,2015,12616.0
+"Buffalo, NY",msa,2016,13520.0
+"Buffalo, NY",msa,2017,13785.0
+"Buffalo, NY",msa,2018,13099.0
+"Buffalo, NY",msa,2019,12123.0
+"Buffalo, NY",msa,2020,12129.0
+"Buffalo, NY",msa,2021,13542.0
+"Buffalo, NY",msa,2022,12252.0
+"Buffalo, NY",msa,2023,10008.0
+"Buffalo, NY",msa,2024,10168.0
+"Buffalo, NY",msa,2025,7446.0
+"New York, NY",msa,2008,115077.0
+"New York, NY",msa,2009,116915.0
+"New York, NY",msa,2010,119226.0
+"New York, NY",msa,2011,113469.0
+"New York, NY",msa,2012,124414.0
+"New York, NY",msa,2013,154685.0
+"New York, NY",msa,2014,151889.0
+"New York, NY",msa,2015,170311.0
+"New York, NY",msa,2016,188993.0
+"New York, NY",msa,2017,204483.0
+"New York, NY",msa,2018,196790.0
+"New York, NY",msa,2019,187098.0
+"New York, NY",msa,2020,188605.0
+"New York, NY",msa,2021,247767.0
+"New York, NY",msa,2022,207078.0
+"New York, NY",msa,2023,153646.0
+"New York, NY",msa,2024,147444.0
+"New York, NY",msa,2025,111112.0
+"Rochester, NY",msa,2008,11928.0
+"Rochester, NY",msa,2009,11929.0
+"Rochester, NY",msa,2010,11109.0
+"Rochester, NY",msa,2011,10072.0
+"Rochester, NY",msa,2012,11159.0
+"Rochester, NY",msa,2013,12043.0
+"Rochester, NY",msa,2014,12251.0
+"Rochester, NY",msa,2015,13488.0
+"Rochester, NY",msa,2016,14637.0
+"Rochester, NY",msa,2017,14999.0
+"Rochester, NY",msa,2018,14524.0
+"Rochester, NY",msa,2019,14129.0
+"Rochester, NY",msa,2020,13767.0
+"Rochester, NY",msa,2021,14662.0
+"Rochester, NY",msa,2022,12971.0
+"Rochester, NY",msa,2023,10580.0
+"Rochester, NY",msa,2024,10648.0
+"Rochester, NY",msa,2025,7768.0
+"Syracuse, NY",msa,2008,6412.0
+"Syracuse, NY",msa,2009,6589.0
+"Syracuse, NY",msa,2010,6021.0
+"Syracuse, NY",msa,2011,5816.0
+"Syracuse, NY",msa,2012,6473.0
+"Syracuse, NY",msa,2013,6626.0
+"Syracuse, NY",msa,2014,7072.0
+"Syracuse, NY",msa,2015,7792.0
+"Syracuse, NY",msa,2016,8584.0
+"Syracuse, NY",msa,2017,8934.0
+"Syracuse, NY",msa,2018,8000.0
+"Syracuse, NY",msa,2019,7590.0
+"Syracuse, NY",msa,2020,7862.0
+"Syracuse, NY",msa,2021,8713.0
+"Syracuse, NY",msa,2022,6873.0
+"Syracuse, NY",msa,2023,5652.0
+"Syracuse, NY",msa,2024,5764.0
+"Syracuse, NY",msa,2025,4216.0

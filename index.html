@@ -121,11 +121,14 @@
     </div>
   </section>
 
-  <section id="statewide-housing" class="mb-4">
-    <h2 class="mb-3">Statewide Insights</h2>
-    <h3 class="mb-4">So, now we have found that it is indeed expensive to live in New York City and it is the more expensive area of the second most expensive state in USA.</h3>
-    <h4>Do people earn more to live here?</h4>
-    <div id="ny_state_map" class="viz-panel"></div>
+  <section id="ny-sales-trends" class="mb-4">
+    <h2 class="mb-3">Sales Trends Across New York</h2>
+    <h3 class="mb-4">See how annual home sales volume has shifted across major metro areas.</h3>
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <div id="ny_sales_area_chart" class="viz-panel"></div>
+      </div>
+    </div>
   </section>
 
 </main>
@@ -365,7 +368,8 @@
 
     const chartConfigs = [
       { selector: '#ny_state_map', spec: 'ny_housing.json' },
-      { selector: '#manhattan_map', spec: 'manhattan.json' }
+      { selector: '#manhattan_map', spec: 'manhattan.json' },
+      { selector: '#ny_sales_area_chart', spec: 'ny_salescount_area.json' }
     ];
 
     const embedPromises = chartConfigs.reduce((acc, { selector, spec }) => {

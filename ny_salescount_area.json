@@ -1,10 +1,10 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": 900,
+  "height": 520,
   "data": {
     "url": "ny_comparison/NY_salescount_yearly.csv"
   },
-  "width": "container",
-  "height": 360,
   "transform": [
     {
       "filter": "isValid(datum.Sales) && datum.Sales > 0"
@@ -26,56 +26,96 @@
       ]
     }
   ],
-  "mark": {
-    "type": "area",
-    "interpolate": "monotone",
-    "opacity": 0.85
-  },
-  "encoding": {
-    "x": {
-      "field": "YearDate",
-      "type": "temporal",
-      "axis": {
-        "title": "Year",
-        "format": "%Y"
-      }
-    },
-    "y": {
-      "field": "Sales",
-      "type": "quantitative",
-      "stack": "zero",
-      "axis": {
-        "title": "Total Sales Count"
-      }
-    },
-    "color": {
-      "field": "RegionName",
-      "type": "nominal",
-      "title": "Region",
-      "sort": {
-        "field": "TotalSales",
-        "order": "descending"
-      }
-    },
-    "tooltip": [
-      {
-        "field": "RegionName",
-        "type": "nominal",
-        "title": "Region"
+  "layer": [
+    {
+      "mark": {
+        "type": "area",
+        "interpolate": "monotone",
+        "opacity": 0.85
       },
-      {
-        "field": "Year",
-        "type": "quantitative",
-        "title": "Year"
-      },
-      {
-        "field": "Sales",
-        "type": "quantitative",
-        "title": "Sales Count",
-        "format": ","
+      "encoding": {
+        "x": {
+          "field": "YearDate",
+          "type": "temporal",
+          "axis": {
+            "title": "Year",
+            "format": "%Y"
+          }
+        },
+        "y": {
+          "field": "Sales",
+          "type": "quantitative",
+          "stack": "zero",
+          "axis": {
+            "title": "Total Sales Count"
+          }
+        },
+        "color": {
+          "field": "RegionName",
+          "type": "nominal",
+          "title": "Region",
+          "sort": {
+            "field": "TotalSales",
+            "order": "descending"
+          }
+        },
+        "tooltip": [
+          {
+            "field": "RegionName",
+            "type": "nominal",
+            "title": "Region"
+          },
+          {
+            "field": "Year",
+            "type": "quantitative",
+            "title": "Year"
+          },
+          {
+            "field": "Sales",
+            "type": "quantitative",
+            "title": "Sales Count",
+            "format": ","
+          }
+        ]
       }
-    ]
-  },
+    },
+    {
+      "transform": [
+        {
+          "aggregate": [
+            {
+              "op": "sum",
+              "field": "Sales",
+              "as": "Sales"
+            }
+          ],
+          "groupby": [
+            "Year",
+            "YearDate"
+          ]
+        }
+      ],
+      "mark": {
+        "type": "rule",
+        "color": "#adb5bd",
+        "size": 1,
+        "opacity": 0.6
+      },
+      "encoding": {
+        "x": {
+          "field": "YearDate",
+          "type": "temporal"
+        },
+        "tooltip": [
+          {
+            "field": "Year",
+            "type": "quantitative",
+            "title": "Year"
+          }
+        ]
+      }
+    }
+  ],
   "config": {
     "axis": {
       "labelColor": "#1f2f43",

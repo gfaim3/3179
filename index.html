@@ -28,7 +28,7 @@
         <li class="nav-item"><a class="nav-link" href="#top">Home</a></li>
         <li class="nav-item"><a class="nav-link" href="#curr_housing">Current Housing Market</a></li>
         <li class="nav-item"><a class="nav-link" href="#national-housing">National Comparison</a></li>
-        <li class="nav-item"><a class="nav-link" href="#statewide-housing">Statewide Insights</a></li>
+        <li class="nav-item"><a class="nav-link" href="#ny-sales-trends">New York Sales</a></li>
         <li class="nav-item"><a class="nav-link" href="#manhattan-housing">Manhattan Focus</a></li>
       </ul>
     </div>
@@ -124,9 +124,19 @@
   <section id="ny-sales-trends" class="mb-4">
     <h2 class="mb-3">Sales Trends Across New York</h2>
     <h3 class="mb-4">See how annual home sales volume has shifted across major metro areas.</h3>
-    <div class="card shadow-sm">
+    <div class="card shadow-sm ny-sales-card">
       <div class="card-body">
         <div id="ny_sales_area_chart" class="viz-panel"></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="ny-sales-seasonality" class="mb-4">
+    <h2 class="mb-3">Seasonality of Sales Volume</h2>
+    <h3 class="mb-4">Heatmap shows which months are busiest for New York home sales each year.</h3>
+    <div class="card shadow-sm ny-sales-card">
+      <div class="card-body">
+        <div id="ny_sales_heatmap" class="viz-panel"></div>
       </div>
     </div>
   </section>
@@ -369,7 +379,8 @@
     const chartConfigs = [
       { selector: '#ny_state_map', spec: 'ny_housing.json' },
       { selector: '#manhattan_map', spec: 'manhattan.json' },
-      { selector: '#ny_sales_area_chart', spec: 'ny_salescount_area.json' }
+      { selector: '#ny_sales_area_chart', spec: 'ny_salescount_area.json' },
+      { selector: '#ny_sales_heatmap', spec: 'ny_salescount_heatmap.json' }
     ];
 
     const embedPromises = chartConfigs.reduce((acc, { selector, spec }) => {
@@ -378,6 +389,7 @@
         console.warn(`Skipping chart for ${selector} because the container was not found.`);
         return acc;
       }
+      console.log(`Embedding spec "${spec}" into ${selector}`);
       const promise = vegaEmbed(container, spec, { actions: false })
         .then((result) => result.view)
         .catch((error) => {

@@ -1,0 +1,74 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "Heatmap of combined monthly sales counts across New York State.",
+  "width": 500,
+  "height": 380,
+  "data": {
+    "url": "ny_comparison/NY_salescount_monthly.csv"
+  },
+  "mark": "rect",
+  "encoding": {
+    "x": {
+      "field": "Month",
+      "type": "ordinal",
+      "title": "Month",
+      "sort": [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec"
+      ],
+      "axis": { "labelAngle": 0 }
+    },
+    "y": {
+      "field": "Year",
+      "type": "ordinal",
+      "title": "Year",
+      "sort": "ascending"
+    },
+    "color": {
+      "field": "Sales",
+      "type": "quantitative",
+      "title": "Sales Count",
+      "scale": {
+        "scheme": "blues"
+      }
+    },
+    "tooltip": [
+      {
+        "field": "Year",
+        "type": "ordinal",
+        "title": "Year"
+      },
+      {
+        "field": "Month",
+        "type": "ordinal",
+        "title": "Month"
+      },
+      {
+        "field": "Sales",
+        "type": "quantitative",
+        "title": "Sales Count",
+        "format": ","
+      }
+    ]
+  },
+  "config": {
+    "axis": {
+      "labelColor": "#1f2f43",
+      "titleColor": "#1f2f43"
+    },
+    "legend": {
+      "labelColor": "#1f2f43",
+      "titleColor": "#1f2f43"
+    }
+  }
+}
